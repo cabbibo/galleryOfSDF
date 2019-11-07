@@ -75,12 +75,19 @@ float smin(float a, float b, float k)
 }
 
 
-float2 smoothS( float2 d1, float2 d2, float k)
+/*float2 smoothS( float2 d1, float2 d2, float k)
 {
     float a = d1.x;
     float b = -d2.x;
     float h = clamp(0.5+0.5*(b-a)/k, 0.0, 1.0);
     return float2( lerp(b, a, 1-h) - k*h*(1.0-h), lerp(d2.y, d1.y, pow(h, 2.0)));
+}*/
+
+
+float2 smoothS( float2 d1, float2 d2, float k ) {
+    float h = clamp( 0.5 - 0.5*(d2.x+d1.x)/k, 0.0, 1.0 );
+    return float2( lerp( d2.x, -d1.x, h ) + k*h*(1.0-h) , lerp( d2.y , d1.y , h)); 
+
 }
 
 

@@ -1,4 +1,4 @@
-﻿Shader "sdf/raytrace8_SmoothSubtract"
+﻿Shader "final/final1_part3"
 {
     Properties
     {
@@ -12,6 +12,9 @@
         _Parameter2("Parameter2",Range(0.0,1.0)) = 0
         _Parameter3("Parameter3",Range(0.0,1.0)) = 0
         _Parameter4("Parameter4",Range(0.0,1.0)) = 0
+
+
+        _Cube ("Environment Map", Cube) = "" {}
 
     }
     SubShader
@@ -28,37 +31,44 @@
 
             #include "../Chunks/sdfTopInclude.cginc"
 
-            // new color functions
             #include "../Chunks/hsv.cginc"
 
-            // Combining two spheres 
+
+         uniform samplerCUBE _Cube; 
+
+float3 modit(float3 x, float y)
+{
+  return x - y * floor(x/y);
+}
+
             float2 map( float3 pos ){
 
-                float radius = _Parameter1 * .2;
-                float3 offset = float3(-radius * .3 , radius * .3 , radius * .2);
-                float distanceToSphere = length( pos-offset ) - radius;
-                float sphereID = 1;
-                float2 sphere1 = float2( distanceToSphere , sphereID );
+ 
+
+                float2 final=  float2(-sdSphere(pos,1.7),0.4);
+                
 
 
-                radius = _Parameter1 * .8;
 
-                offset = float3(-radius *.3, -radius *.3 , -radius * .7);
-                distanceToSphere = length( pos-offset ) - radius;
-                sphereID = 2;
 
-                float2 sphere2 = float2( distanceToSphere , sphereID );
-
-                float2 final = smoothS( sphere1, sphere2 , _Parameter2 );
-
-                return final;
+                return  final;
             }
+
+
+            #include "../Chunks/calcAO.cginc"
 
 
             // Coloring different for each sphere using Hue Saturation Value function
             float3 color( float3 pos , float3 nor , float3 ro , float3 rd , float dist , float id){
 
-                float3 col = lerp( hsv( _Parameter3 , 1,1),hsv( _Parameter4 , 1,1), id-1);
+
+
+                float3 reflectedLight = normalize(reflect(rd,nor));
+
+                float4 val = texCUBE(_Cube,reflectedLight);
+
+
+                float3 col = length(val) * length(val) * .2;//fCol;//lerp( fCol , _BaseColor, dist/_MaxDistance);// nor * .5 + .5;//lerp( hsv( _Parameter3 , 1,1),hsv( _Parameter4 , 1,1), id-1);
                 
            
 

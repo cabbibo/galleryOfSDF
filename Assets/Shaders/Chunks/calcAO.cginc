@@ -15,7 +15,7 @@ float calcAO( float3 pos, in float3 nor )
         occ += -(dd-hr)*sca;
         sca *= 0.95;
     }
-    return clamp( 1.0 - 3.0*occ, 0.0, 1.0 ) * (0.5+0.5*nor.y);
+    return clamp( 1.0 - 3.0*occ, 0.0, 1.0 );
 }
 
 
