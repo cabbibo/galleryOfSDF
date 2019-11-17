@@ -77,23 +77,23 @@ float3 modit(float3 x, float y)
             float3 color( float3 pos , float3 nor , float3 ro , float3 rd , float dist , float id){
 
 
-                //float ao = calcAO( pos , nor);
+                float ao = calcAO( pos , nor);
 
                 float3 reflectedLight = normalize(reflect(rd,nor));
 
                 float4 val = texCUBE(_Cube,reflectedLight);
 
 
-              //  float3 fCol =val * hsv( id * .2 + _Parameter1 ,ao * 2,1);//hsv( id * ao * .4 ,1,1);//nor * .5 + .5;
+                float3 fCol =val * hsv( id * .2 + _Parameter1 ,ao * 2,1);//hsv( id * ao * .4 ,1,1);//nor * .5 + .5;
 
                 
-                   float3 col = length(val) * length(val) * .2;//fCol;//lerp( fCol , _BaseColor, dist/_MaxDistance);// nor * .5 + .5;//lerp( hsv( _Parameter3 , 1,1),hsv( _Parameter4 , 1,1), id-1);
-              ;//fCol;//lerp( fCol , _BaseColor, dist/_MaxDistance);// nor * .5 + .5;//lerp( hsv( _Parameter3 , 1,1),hsv( _Parameter4 , 1,1), id-1);
+                float3 col = fCol;//lerp( fCol , _BaseColor, dist/_MaxDistance);// nor * .5 + .5;//lerp( hsv( _Parameter3 , 1,1),hsv( _Parameter4 , 1,1), id-1);
                 
            
 
                 return col;
             }
+
 
             #include "../Chunks/sdfBottomInclude.cginc"
 
